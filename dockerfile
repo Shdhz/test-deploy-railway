@@ -37,7 +37,7 @@ COPY . .
 COPY --from=frontend /app/public/build ./public/build
 
 # Install dependency PHP (tanpa dev, optimize autoload)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --ignore-platform-reqs
 
 # Cache config dan route
 RUN php artisan config:clear && php artisan config:cache \
