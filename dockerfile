@@ -16,11 +16,10 @@ COPY public ./public
 # Build Vite (React + Inertia)
 RUN npm run build
 
-
 # ----------------------------
 # Stage 2: Laravel + PHP-FPM
 # ----------------------------
-FROM php:8.4-fpm-alpine
+FROM php:8.3-fpm-alpine
 
 # Install ekstensi PHP yang umum dipakai Laravel
 RUN apk add --no-cache bash curl git unzip libpng-dev libjpeg-turbo-dev libfreetype-dev oniguruma-dev \
@@ -40,9 +39,10 @@ COPY --from=frontend /app/public/build ./public/build
 # Install dependency PHP (tanpa dev, optimize autoload)
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
-# Cache config dan route (biar cepat)
+# Cache config dan route
 RUN php artisan config:clear && php artisan config:cache \
     && php artisan route:clear && php artisan route:cache
 
 EXPOSE 9000
 CMD ["php-fpm"]
+
